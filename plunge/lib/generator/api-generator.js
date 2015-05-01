@@ -13,7 +13,7 @@ function generateRoutes(Collection, router) {
     var name = Collection.name.toLowerCase();
     var model = Collection.model;
 
-    // Route to get all
+    // Route to get all documents of a collection
     router.get('/' + name, function (req, res) {
         model.find({}, function (err, result) {
             if (err) res.handleError(err);
@@ -22,15 +22,18 @@ function generateRoutes(Collection, router) {
             }
         })
     });
+
     var keys = Object.keys(Collection.Schema.paths);
     keys.forEach(function (key) {
-        var urlKey = key.replace('_','').toLowerCase();
-        var queryKey = key.toLowerCase();
-
-        router.get('/' + name + '/' + urlKey + '/:param', function (req, res) {
+        // make key lowercase just to be sure - redundant
+        key = key.toLowerCase();
+        // Generate get route for each key of an object to get a single value
+        router.get('/' + name + '/' + key + '/:param', function (req, res) {
+            // Generic param
             var param = req.params.param;
+            // Build query element for findOne
             var query = {};
-            query[queryKey] = param;
+            query[key] = param;
             model.findOne(query, function (err, result) {
                 if (err) res.handleError(err);
                 else {
