@@ -2,12 +2,7 @@
  * Created by mobinni on 28/04/15.
  */
 var Plunge = require('plunge'),
-    Collection = require('plunge/lib/collection');
-
-router = Plunge.router;
-
-// Import routes
-require('./routes/api-user.js');
+    Collection = require('plunge/lib/db/collection');
 
 var testCol = Collection('TestDocument');
 
@@ -17,14 +12,12 @@ testCol.Schema({
 
 testCol.Register();
 
-testCol.Create({name: 'tozz'});
-
-
 // Init app
 Plunge.init({});
 
 // Initialize API after calls at a certain subpath
 Plunge.initAPI('/api');
+
 
 // Start webserver
 Plunge.listen({

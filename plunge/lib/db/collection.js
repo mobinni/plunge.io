@@ -4,7 +4,8 @@
 var Collection = {},
     Document = require('./document.js'),
     mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    Collections = require('./collections');
 
 module.exports = (function (name) {
     // Bind name
@@ -17,15 +18,17 @@ Collection.Schema = (function (schema) {
 });
 
 Collection.Register = (function () {
+    // Define model
     Collection.model = mongoose.model(Collection.name, Collection.Schema);
-
     // Bind document methods
-    Document.bind(Collection.Schema)
+    Document.bind(Collection.Schema);
+    // Add to collections
+    Collections.add(Collection);
 });
 
-Collection.Create = (function (object) {
+Collection.Create = (function (object, callback) {
     var obj = new Collection.model(object);
-    obj.save().then(function(res) {
-        console.log(res);
+    obj.save().then(function(result) {
+        callback(result);
     });
 });
