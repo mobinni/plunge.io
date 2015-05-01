@@ -17,11 +17,11 @@ module.exports.setOptions = (function (options, app) {
 
     if (options.useCookieParser) app.use(cookieParser());
     if (options.useBodyParser) {
-        app.use(bodyParser.urlencoded({ extended: true }));
-        app.use(bodyParser.json({ extended: true }));
+        app.use(bodyParser.urlencoded({extended: true}));
+        app.use(bodyParser.json({extended: true}));
     }
 
-    app.use(morgan('dev'))
+    app.use(morgan('dev'));
 
 });
 

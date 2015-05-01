@@ -27,6 +27,28 @@ Plunge.init = (function (options) {
     // Mongoose connect
     configuration.connect(options.databaseUrl);
 
+    // Custom error handler for res
+    app.use(function (req, res, next) {
+        res.handleError = (function (error) {
+            res.status(error.status || 500);
+            res.json(error);
+        });
+        next();
+    });
+
+    // Custom result handler
+    app.use(function (req, res, next) {
+        res.handleResult = (function (result) {
+            if (result) {
+                res.status(result.status || 200);
+                res.json(result);
+            } else {
+                res.status(500).json({error: 'result was null'});
+            }
+        });
+        next();
+    });
+
 });
 
 
@@ -42,7 +64,7 @@ Plunge.listen = (function (options) {
 // Initialise router for the API at a specific route
 Plunge.initAPI = (function (route) {
     apiGenerator.generate(router);
-    app.use(route,router);
+    app.use(route, router);
 });
 
 // Expose base libraries

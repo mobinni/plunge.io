@@ -1,5 +1,5 @@
-var Collections = require('../db/collections')
-mongoose = require('mongoose');
+var Collections = require('../db/collections'),
+    mongoose = require('mongoose');
 
 module.exports.generate = (function (router) {
     Collections.get().forEach(function (Collection) {
@@ -15,22 +15,29 @@ function generateRoutes(Collection, router) {
 
     // Route to get all
     router.get('/' + name, function (req, res) {
-        model.find({}).then(function (result) {
-            res.json(result);
+        model.find({}, function (err, result) {
+            if (err) res.handleError(err);
+            else {
+                res.handleResult(result);
+            }
         })
     });
+    var keys = Object.keys(Collection.Schema.paths);
+    keys.forEach(function (key) {
+        var urlKey = key.replace('_','').toLowerCase();
+        var queryKey = key.toLowerCase();
 
-    router.get('/' + name + '/:id', function (req, res) {
-        var id = req.params.id;
-        if (!id) res.send('fail');
-        else {
-            model.findOne({'_id': id}).then(function (result) {
-                if (!result) res.error();
+        router.get('/' + name + '/' + urlKey + '/:param', function (req, res) {
+            var param = req.params.param;
+            var query = {};
+            query[queryKey] = param;
+            model.findOne(query, function (err, result) {
+                if (err) res.handleError(err);
                 else {
-                    res.json(result);
+                    res.handleResult(result);
                 }
             });
-        }
+        });
     });
 
 }
