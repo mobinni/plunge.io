@@ -51,7 +51,6 @@ Plunge.init = (function (options) {
 
 });
 
-
 Plunge.listen = (function (options) {
     port = options.port ? options.port : 3000;
     options.message = options.message ? options.message : '';
@@ -68,16 +67,16 @@ Plunge.initAPI = (function (route) {
 });
 
 // Expose base libraries
-Plunge.router = router;
+module.exports.express = express;
 
-Plunge.express = express;
+module.exports.app = app;
 
-Plunge.app = app;
+module.exports.cors = cors;
 
-Plunge.cors = cors;
+module.exports.logger = logger;
 
-Plunge.logger = logger;
-
-Plunge.mongoose = mongoose;
+module.exports.mongoose = mongoose;
 
 module.exports = Plunge;
+
+module.exports.router = router;
