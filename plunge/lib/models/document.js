@@ -7,10 +7,10 @@ module.exports.bind = (function (schema) {
 // TODO: implement eventdriven approach
 Document.save = (function (schema) {
     schema.methods.save = (function (obj, callback) {
-      obj.save(function (err) {
-          if(err) callback(err);
+      obj.save(function (err, result) {
+          if(err) callback(err, null);
           else {
-              callback('success');
+              callback(null, result);
           }
       });
    });
