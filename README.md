@@ -3,7 +3,12 @@ API template
 Still in development
 
 # Requirements 
-``` javascript
+```javascript
 npm install istanbul -g 
 npm install mocha -g
+```
+
+# Testing
+```javascript
+npm test
 ```
