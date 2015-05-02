@@ -26,10 +26,43 @@ module.exports.setOptions = (function (options, app) {
 });
 
 /*
+ * Custom handlers
+ */
+
+module.exports.setCustomHandlers = (function (app) {
+    // Custom error handler for res
+    app.use(function (req, res, next) {
+        res.handleError = (function (error) {
+            res.status(error.status || 500);
+            res.json(error);
+        });
+        next();
+    });
+
+    // Custom result handler
+    app.use(function (req, res, next) {
+        res.handleResult = (function (result) {
+            if (result) {
+                res.status(result.status || 200);
+                res.json(result);
+            } else {
+                res.status(500).json({error: 'result was null'});
+            }
+        });
+        next();
+    });
+});
+
+/*
  * MONGOOSE
  */
 module.exports.connect = (function (dbUrl) {
-    mongoose.connect(dbUrl);
+    mongoose.connect(dbUrl, function (error) {
+        if (error) {
+            console.log('Something went wrong while connecting to the database');
+            process.exit(0);
+        }
+    });
 });
 
 // CONNECTION EVENTS
