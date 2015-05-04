@@ -29,6 +29,7 @@ Collection.Register = (function () {
 Collection.Create = (function (object) {
     var obj = new Collection.model(object);
     obj.save(function (err, result) {
+        // Emit error, not an exception
         if (err) eventHandler.emit('e_document_error', err);
         else {
             eventHandler.emit('e_document_saved', result);

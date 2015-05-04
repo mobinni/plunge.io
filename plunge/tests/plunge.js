@@ -8,6 +8,11 @@ var assert = require("assert"),
     Collections = require('../lib/models/Collections'),
     Plunge = require('../plunge');
 
+var collection = Collection('TestCollection');
+collection.Schema({
+    name: String
+});
+
 before(function (done) {
     Plunge.init({});
     mongoose.connection.on('connected', function () {
@@ -29,10 +34,6 @@ describe('Test Plunge configuration', function () {
 
     describe('#collections', function () {
         it('should generate and register a collection', function (done) {
-            var collection = Collection('TestCollection');
-            collection.Schema({
-                name: String
-            });
             collection.Register();
             assert.strictEqual('TestCollection', collection.name, "Collection name not equal");
             assert.strictEqual(true, !!collection.Schema, "Collection Schema not defined");

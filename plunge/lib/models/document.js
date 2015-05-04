@@ -8,7 +8,7 @@ module.exports.bind = (function (schema) {
 Document.save = (function (schema) {
     schema.methods.save = (function (obj, callback) {
       obj.save(function (err, result) {
-          if(err) callback(err, null);
+          if(err) throw new Error(err);
           else {
               callback(null, result);
           }

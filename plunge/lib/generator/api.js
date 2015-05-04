@@ -1,14 +1,12 @@
-var eventHandler = require('../config/eventbus'),
-    Collections = require('../models/collections'),
+var Collections = require('../models/collections'),
     routes = require('./routes'),
     mongoose = require('mongoose'),
     async = require('async');
 
 module.exports.generate = (function (router) {
     async.each(Collections, function (collection, callback) {
-
-        // Emit event
-        eventHandler.emit('e_generate_routes', {collection: collection, router: router});
+        // Generate routes
+        generateRoutes({collection: collection, router: router});
 
         // All went well
         callback(null);
@@ -19,9 +17,6 @@ module.exports.generate = (function (router) {
 
 });
 
-// Bind handler to method on event
-eventHandler.on('e_generate_routes', generateRoutes);
-
 function generateRoutes(params) {
     var collection = params.collection,
         router = params.router;
@@ -30,17 +25,12 @@ function generateRoutes(params) {
         model = collection.model;
 
     // Emit events to generate routes
-    eventHandler.emit('e_generate_route_get_all', {routeBase: name, model: model, router: router});
-    eventHandler.emit('e_generate_find_one_routes', {
+    routes.generateAllRoute({routeBase: name, model: model, router: router});
+    routes.generateFindOneRoutes({
         routeBase: name,
         model: model,
         router: router,
         schema: collection.Schema
-    })
+    });
 
 }
-
-// Register event handlers
-eventHandler.on('e_generate_route_get_all', routes.generateAllRoute);
-eventHandler.on('e_generate_route_get_all', routes.generateFindOneRoutes);
-
